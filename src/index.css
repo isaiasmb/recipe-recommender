@@ -128,3 +128,41 @@
     @apply font-sans;
     }
 }
+
+@layer utilities {
+  .scrollbar-themed {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in oklch, var(--muted-foreground) 45%, transparent)
+      color-mix(in oklch, var(--muted) 65%, transparent);
+  }
+
+  .scrollbar-themed::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  .scrollbar-themed::-webkit-scrollbar-track {
+    margin-block: 4px;
+    border-radius: 9999px;
+    background: color-mix(in oklch, var(--muted) 65%, transparent);
+  }
+
+  .scrollbar-themed::-webkit-scrollbar-thumb {
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    background-color: color-mix(in oklch, var(--muted-foreground) 40%, transparent);
+  }
+
+  .scrollbar-themed::-webkit-scrollbar-thumb:hover {
+    background-color: color-mix(in oklch, var(--muted-foreground) 60%, transparent);
+  }
+}
+
+@keyframes meal-thumb-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
