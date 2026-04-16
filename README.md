@@ -2,6 +2,8 @@
 
 A small React app that recommends meals based on cuisine area and ingredients, powered by [TheMealDB](https://www.themealdb.com/api.php) API.
 
+**Live app:** [https://reciperecommenderapp.netlify.app/](https://reciperecommenderapp.netlify.app/)
+
 ## Stack and libraries
 
 ### Vite
