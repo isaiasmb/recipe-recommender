@@ -16,7 +16,7 @@ import {
   ComboboxList,
 } from "@/components/ui/combobox"
 
-import { areaFieldSchema, useFormContext } from "./formContext"
+import { areaFieldSchema, useFormContext } from "../formContext"
 import { getAreas } from "@/http/get-areas"
 import BgImage from "@/components/bg-image"
 
