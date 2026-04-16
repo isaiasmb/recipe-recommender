@@ -1,8 +1,8 @@
 import { useEffect } from "react"
 import { toast } from "sonner"
 
-import { mainIngredientFieldSchema, useFormContext } from "./formContext"
-import { useMealsIngredients } from "./hooks/useMealsIngredients"
+import { mainIngredientFieldSchema, useFormContext } from "../formContext"
+import { useMealsIngredients } from "../hooks/useMealsIngredients"
 import {
   Field,
   FieldError,
@@ -17,7 +17,7 @@ import {
   ComboboxItem,
   ComboboxList,
 } from "@/components/ui/combobox"
-import BgImage from "../bg-image"
+import BgImage from "@/components/bg-image"
 
 const Step2 = () => {
   const { form } = useFormContext()
