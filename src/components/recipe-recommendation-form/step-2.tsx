@@ -17,12 +17,12 @@ import {
   ComboboxItem,
   ComboboxList,
 } from "@/components/ui/combobox"
+import BgImage from "../bg-image"
 
 const Step2 = () => {
   const { form } = useFormContext()
   const area = form.getFieldValue("area")
-  const { ingredients, isLoading, isError, error } =
-    useMealsIngredients(area)
+  const { ingredients, isLoading, isError, error } = useMealsIngredients(area)
 
   useEffect(() => {
     if (!isError) {
@@ -41,7 +41,7 @@ const Step2 = () => {
 
   return (
     <div className="flex min-h-0 w-full flex-1 flex-col gap-4">
-      <FieldGroup className="shrink-0">
+      <FieldGroup>
         <form.Field
           name="mainIngredient"
           validators={{
@@ -90,10 +90,8 @@ const Step2 = () => {
           }}
         </form.Field>
       </FieldGroup>
-      <div
-        aria-hidden
-        className="min-h-0 flex-1 rounded-md bg-[url('/ingredients.png')] bg-contain bg-center bg-no-repeat opacity-[0.02] dark:opacity-[0.07]"
-      />
+
+      <BgImage imagePath="ingredients.png" />
     </div>
   )
 }

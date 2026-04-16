@@ -18,6 +18,7 @@ import {
 
 import { areaFieldSchema, useFormContext } from "./formContext"
 import { getAreas } from "@/http/get-areas"
+import BgImage from "../bg-image"
 
 const Step1 = () => {
   const { data, isLoading, isError, error } = useQuery({
@@ -44,7 +45,7 @@ const Step1 = () => {
 
   return (
     <div className="flex min-h-0 w-full flex-1 flex-col gap-4">
-      <FieldGroup className="shrink-0">
+      <FieldGroup>
         <form.Field
           name="area"
           validators={{
@@ -92,10 +93,8 @@ const Step1 = () => {
           }}
         </form.Field>
       </FieldGroup>
-      <div
-        aria-hidden
-        className="min-h-0 flex-1 rounded-md bg-[url('/countries.png')] bg-contain bg-center bg-no-repeat opacity-[0.02] dark:opacity-[0.07]"
-      />
+
+      <BgImage imagePath="countries.png" />
     </div>
   )
 }
