@@ -53,7 +53,7 @@ const RecipeRecommendationForm = () => {
     <Card className="h-[min(44rem,85vh)] min-h-0">
       <MealsIngredientsSync />
       <CardHeader>
-        <CardTitle>Form</CardTitle>
+        <CardTitle>Recommendation Form</CardTitle>
         <CardDescription>
           Pick your cuisine and ingredient in two steps. Live search updates as
           you type—get a fresh recipe idea instantly!

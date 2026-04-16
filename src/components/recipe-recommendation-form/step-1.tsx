@@ -1,4 +1,6 @@
+import { useEffect } from "react"
 import { useQuery } from "@tanstack/react-query"
+import { toast } from "sonner"
 import {
   Field,
   FieldError,
@@ -18,11 +20,23 @@ import { areaFieldSchema, useFormContext } from "./formContext"
 import { getAreas } from "@/http/get-areas"
 
 const Step1 = () => {
-  const { data } = useQuery({
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: ["areas"],
     queryFn: getAreas,
     staleTime: Infinity, // cache until params change
   })
+
+  useEffect(() => {
+    if (!isError) {
+      return
+    }
+
+    console.error(error)
+    toast.error("Failed to load cuisine areas. Please try again later.", {
+      id: "areas-query-error",
+      position: "top-right",
+    })
+  }, [isError, error])
 
   const { form } = useFormContext()
 
@@ -45,6 +59,7 @@ const Step1 = () => {
                 <FieldLabel htmlFor={field.name}>Cusine/Area</FieldLabel>
 
                 <Combobox
+                  loading={isLoading}
                   items={countries ?? []}
                   value={field.state.value || null}
                   onValueChange={(value) => {

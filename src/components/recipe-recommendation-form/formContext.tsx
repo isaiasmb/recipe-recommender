@@ -62,10 +62,6 @@ export const FormContextProvider = ({
   const form = useForm({
     ...recipeFormDefaults,
     defaultValues,
-    onSubmit: async ({ value }) => {
-      console.log("value: ", value)
-      // TODO: Save the form values to the database.
-    },
   })
 
   return (

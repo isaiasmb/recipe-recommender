@@ -1,3 +1,6 @@
+import { useEffect } from "react"
+import { toast } from "sonner"
+
 import { mainIngredientFieldSchema, useFormContext } from "./formContext"
 import { useMealsIngredients } from "./hooks/useMealsIngredients"
 import {
@@ -18,7 +21,23 @@ import {
 const Step2 = () => {
   const { form } = useFormContext()
   const area = form.getFieldValue("area")
-  const { ingredients, isLoading } = useMealsIngredients(area)
+  const { ingredients, isLoading, isError, error } =
+    useMealsIngredients(area)
+
+  useEffect(() => {
+    if (!isError) {
+      return
+    }
+
+    console.error(error)
+    toast.error(
+      "Failed to load meals or ingredients for this area. Please try again later.",
+      {
+        id: "meals-ingredients-query-error",
+        position: "top-right",
+      }
+    )
+  }, [isError, error])
 
   return (
     <div className="flex min-h-0 w-full flex-1 flex-col gap-4">
