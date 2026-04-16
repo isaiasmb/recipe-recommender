@@ -1,6 +1,6 @@
 import { useHistoryStore } from "@/store/history"
-import MealsEmptyList from "./meals-empty-list"
-import MealsList from "./meals-list"
+import MealsEmptyList from "../meals-empty-list"
+import MealsList from "../meals-list"
 
 const LikedMeals = () => {
   const { likedMeals } = useHistoryStore()
