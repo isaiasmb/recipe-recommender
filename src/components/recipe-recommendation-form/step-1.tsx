@@ -18,7 +18,7 @@ import {
 
 import { areaFieldSchema, useFormContext } from "./formContext"
 import { getAreas } from "@/http/get-areas"
-import BgImage from "../bg-image"
+import BgImage from "@/components/bg-image"
 
 const Step1 = () => {
   const { data, isLoading, isError, error } = useQuery({
