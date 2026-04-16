@@ -12,8 +12,8 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty"
 import { Button } from "@/components/ui/button"
-import { useRecommendedMeals } from "./hooks/useRecommendedMeals"
-import { useFormContext } from "./formContext"
+import { useRecommendedMeals } from "../hooks/useRecommendedMeals"
+import { useFormContext } from "../formContext"
 
 const Step3 = () => {
   const recommendedMeals = useRecommendedMeals()
