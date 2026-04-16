@@ -1,7 +1,7 @@
 import { useQueries, useQuery } from "@tanstack/react-query"
 import { useMemo } from "react"
-import { getMealById } from "@/http/get-meal"
 import { type Meal } from "@/schemas"
+import { getMealById } from "@/http/get-meal"
 import { getMealsByArea } from "@/http/get-meals"
 import { toTitleCase } from "@/utils/string"
 
