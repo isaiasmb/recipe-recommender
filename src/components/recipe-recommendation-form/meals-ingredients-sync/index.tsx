@@ -2,8 +2,8 @@ import { useStore } from "@tanstack/react-form"
 import { useEffect } from "react"
 import { useIngredientsStore } from "@/store/ingredients"
 import { useMealsStore } from "@/store/meals"
-import { useMealsIngredients } from "./hooks/useMealsIngredients"
-import { useFormContext } from "./formContext"
+import { useMealsIngredients } from "../hooks/useMealsIngredients"
+import { useFormContext } from "../formContext"
 
 /**
  * Loads meals/ingredients for the selected area and mirrors them into global stores.
