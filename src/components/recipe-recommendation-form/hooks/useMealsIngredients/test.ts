@@ -1,6 +1,6 @@
 import "./mocks"
-import { renderHook } from "@testing-library/react"
-import { beforeEach, describe, expect, it } from "vitest"
+import { renderHook, type RenderHookResult } from "@testing-library/react"
+import { describe, expect, it } from "vitest"
 import type { Meal } from "@/schemas"
 import {
   mockGetMealById,
@@ -8,7 +8,7 @@ import {
   mockUseQueries,
   mockUseQuery,
 } from "./mocks"
-import { useMealsIngredients } from "./index"
+import { type UseMealsIngredientsResult, useMealsIngredients } from "./index"
 
 type ListQuery = {
   data?: { meals: { idMeal: string }[] }
@@ -24,6 +24,16 @@ type DetailQuery = {
   isError: boolean
   error?: unknown
   dataUpdatedAt: number
+}
+
+type SetupOptions = {
+  area?: string
+  listQuery: ListQuery
+  detailQueries: DetailQuery[]
+}
+
+type SetupResult = {
+  result: RenderHookResult<UseMealsIngredientsResult, undefined>["result"]
 }
 
 const list = (overrides: Partial<ListQuery> = {}): ListQuery => ({
@@ -43,14 +53,23 @@ const detail = (overrides: Partial<DetailQuery> = {}): DetailQuery => ({
   ...overrides,
 })
 
-describe("useMealsIngredients", () => {
-  beforeEach(() => {
-    mockUseQuery.mockReset()
-    mockUseQueries.mockReset()
-    mockGetMealsByArea.mockReset()
-    mockGetMealById.mockReset()
-  })
+const setup = (options: SetupOptions): SetupResult => {
+  mockUseQuery.mockReset()
+  mockUseQueries.mockReset()
+  mockGetMealsByArea.mockReset()
+  mockGetMealById.mockReset()
 
+  const area = options.area ?? ""
+
+  mockUseQuery.mockReturnValue(options.listQuery)
+  mockUseQueries.mockReturnValue(options.detailQueries)
+
+  const { result } = renderHook(() => useMealsIngredients(area))
+
+  return { result }
+}
+
+describe("useMealsIngredients", () => {
   it.each([
     {
       name: "empty area",
@@ -70,10 +89,11 @@ describe("useMealsIngredients", () => {
   ])(
     "is idle with empty meals and ingredients when $name",
     ({ area, listQuery, detailQueries }) => {
-      mockUseQuery.mockReturnValue(listQuery)
-      mockUseQueries.mockReturnValue(detailQueries)
-
-      const { result } = renderHook(() => useMealsIngredients(area))
+      const { result } = setup({
+        area,
+        listQuery,
+        detailQueries,
+      })
 
       expect(result.current.isLoading).toBe(false)
       expect(result.current.isError).toBe(false)
@@ -84,12 +104,11 @@ describe("useMealsIngredients", () => {
   )
 
   it("loads while the area meal list is pending", () => {
-    mockUseQuery.mockReturnValue(
-      list({ isPending: true, isSuccess: false, data: undefined })
-    )
-    mockUseQueries.mockReturnValue([])
-
-    const { result } = renderHook(() => useMealsIngredients("Mexican"))
+    const { result } = setup({
+      area: "Mexican",
+      listQuery: list({ isPending: true, isSuccess: false, data: undefined }),
+      detailQueries: [],
+    })
 
     expect(result.current.isLoading).toBe(true)
     expect(result.current.meals).toEqual([])
@@ -97,19 +116,18 @@ describe("useMealsIngredients", () => {
   })
 
   it("loads while meal ids exist but detail queries are still pending", () => {
-    mockUseQuery.mockReturnValue(
-      list({
+    const { result } = setup({
+      area: "Thai",
+      listQuery: list({
         data: { meals: [{ idMeal: "1" }, { idMeal: "2" }] },
         isPending: false,
         isSuccess: true,
-      })
-    )
-    mockUseQueries.mockReturnValue([
-      detail({ isPending: true, dataUpdatedAt: 0 }),
-      detail({ isPending: true, dataUpdatedAt: 0 }),
-    ])
-
-    const { result } = renderHook(() => useMealsIngredients("Thai"))
+      }),
+      detailQueries: [
+        detail({ isPending: true, dataUpdatedAt: 0 }),
+        detail({ isPending: true, dataUpdatedAt: 0 }),
+      ],
+    })
 
     expect(result.current.isLoading).toBe(true)
     expect(result.current.meals).toEqual([])
@@ -128,25 +146,24 @@ describe("useMealsIngredients", () => {
       strIngredient2: "lime",
     } as Meal
 
-    mockUseQuery.mockReturnValue(
-      list({
+    const { result } = setup({
+      area: "Thai",
+      listQuery: list({
         data: { meals: [{ idMeal: "1" }, { idMeal: "2" }] },
         isPending: false,
         isSuccess: true,
-      })
-    )
-    mockUseQueries.mockReturnValue([
-      detail({
-        data: { meals: [mealA] },
-        dataUpdatedAt: 10,
       }),
-      detail({
-        data: { meals: [mealB] },
-        dataUpdatedAt: 20,
-      }),
-    ])
-
-    const { result } = renderHook(() => useMealsIngredients("Thai"))
+      detailQueries: [
+        detail({
+          data: { meals: [mealA] },
+          dataUpdatedAt: 10,
+        }),
+        detail({
+          data: { meals: [mealB] },
+          dataUpdatedAt: 20,
+        }),
+      ],
+    })
 
     expect(result.current.isLoading).toBe(false)
     expect(result.current.isError).toBe(false)
@@ -160,25 +177,24 @@ describe("useMealsIngredients", () => {
       strIngredient1: "salt",
     } as Meal
 
-    mockUseQuery.mockReturnValue(
-      list({
+    const { result } = setup({
+      area: "Greek",
+      listQuery: list({
         data: { meals: [{ idMeal: "1" }, { idMeal: "2" }] },
         isPending: false,
         isSuccess: true,
-      })
-    )
-    mockUseQueries.mockReturnValue([
-      detail({
-        data: { meals: [meal] },
-        dataUpdatedAt: 1,
       }),
-      detail({
-        data: { meals: [] },
-        dataUpdatedAt: 2,
-      }),
-    ])
-
-    const { result } = renderHook(() => useMealsIngredients("Greek"))
+      detailQueries: [
+        detail({
+          data: { meals: [meal] },
+          dataUpdatedAt: 1,
+        }),
+        detail({
+          data: { meals: [] },
+          dataUpdatedAt: 2,
+        }),
+      ],
+    })
 
     expect(result.current.meals).toEqual([meal])
     expect(result.current.ingredients).toEqual(["Salt"])
@@ -212,51 +228,53 @@ describe("useMealsIngredients", () => {
       ],
       expectedError: new Error("detail failed"),
     },
-  ])("surfaces error from $name", ({ listQuery, detailQueries, expectedError }) => {
-    mockUseQuery.mockReturnValue(listQuery)
-    mockUseQueries.mockReturnValue(detailQueries)
+  ])(
+    "surfaces error from $name",
+    ({ listQuery, detailQueries, expectedError }) => {
+      const { result } = setup({
+        area: "French",
+        listQuery,
+        detailQueries,
+      })
 
-    const { result } = renderHook(() => useMealsIngredients("French"))
-
-    expect(result.current.isError).toBe(true)
-    expect(result.current.error).toEqual(expectedError)
-  })
+      expect(result.current.isError).toBe(true)
+      expect(result.current.error).toEqual(expectedError)
+    }
+  )
 
   it("prefers the list query error over a detail error", () => {
     const listErr = new Error("list")
     const detailErr = new Error("detail")
 
-    mockUseQuery.mockReturnValue(
-      list({
+    const { result } = setup({
+      area: "Spanish",
+      listQuery: list({
         isError: true,
         error: listErr,
         isPending: false,
         isSuccess: false,
-      })
-    )
-    mockUseQueries.mockReturnValue([
-      detail({ isError: true, error: detailErr, dataUpdatedAt: 1 }),
-    ])
-
-    const { result } = renderHook(() => useMealsIngredients("Spanish"))
+      }),
+      detailQueries: [
+        detail({ isError: true, error: detailErr, dataUpdatedAt: 1 }),
+      ],
+    })
 
     expect(result.current.error).toBe(listErr)
   })
 
   it("keeps meals and ingredients empty when detail query count does not match ids (settled but not aligned)", () => {
-    mockUseQuery.mockReturnValue(
-      list({
+    const { result } = setup({
+      area: "Japanese",
+      listQuery: list({
         data: { meals: [{ idMeal: "1" }] },
         isPending: false,
         isSuccess: true,
-      })
-    )
-    mockUseQueries.mockReturnValue([
-      detail({ dataUpdatedAt: 1 }),
-      detail({ dataUpdatedAt: 2 }),
-    ])
-
-    const { result } = renderHook(() => useMealsIngredients("Japanese"))
+      }),
+      detailQueries: [
+        detail({ dataUpdatedAt: 1 }),
+        detail({ dataUpdatedAt: 2 }),
+      ],
+    })
 
     expect(result.current.isLoading).toBe(false)
     expect(result.current.meals).toEqual([])
