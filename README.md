@@ -38,6 +38,17 @@ UI is built on shadcn/ui: Radix primitives, Tailwind styling, and copy-paste com
 
 Unit and integration tests use Vitest—the tooling feels like a modern Jest-style stack (familiar APIs, fast runs) with first-class Vite integration.
 
+## Testing
+
+`pnpm test` / `pnpm test:run` executes the Vitest suite. Example output from a successful run:
+
+```
+ Test Files  14 passed (14)
+      Tests  58 passed (58)
+```
+
+Coverage includes the multi-step recommendation form (steps 1–3, meals–ingredients sync), data hooks (`useHistory`, `useMealsIngredients`, `useRecommendedMeals`), recipe history views, the recommended-meal UI, shared components such as `image`, and an integration test that walks the full flow with HTTP-backed data.
+
 ## Technical decisions
 
 ### Working around TheMealDB’s API
